@@ -265,10 +265,10 @@ try {
 
         stage('Generate Reports') {
             if (isUnix()) {
-                junit '**/target/surefire-reports/*.xml'
-                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'target/site/apidocs', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
+                junit '**/devops-web-maven/target/surefire-reports/*.xml'
+                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'devops-web-maven/target/site/apidocs', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
             } else {
-                junit '**\\target\\surefire-reports\\*.xml'
+                junit '**\\devops-web-maven\\target\\surefire-reports\\*.xml'
             }
         }
 
