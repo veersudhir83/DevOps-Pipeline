@@ -58,7 +58,7 @@
       <submoduleCfg class="list"/>
       <extensions/>
     </scm>
-    <scriptPath>Addressbook-vaadin.groovy</scriptPath>
+    <scriptPath>./src/Addressbook-vaadin.groovy</scriptPath>
     <lightweight>true</lightweight>
   </definition>
   <triggers/>

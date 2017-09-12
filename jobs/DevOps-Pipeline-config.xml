@@ -68,7 +68,7 @@
       <submoduleCfg class="list"/>
       <extensions/>
     </scm>
-    <scriptPath>DevOps-Pipeline.groovy</scriptPath>
+    <scriptPath>./src/DevOps-Pipeline.groovy</scriptPath>
     <lightweight>true</lightweight>
   </definition>
   <triggers/>
