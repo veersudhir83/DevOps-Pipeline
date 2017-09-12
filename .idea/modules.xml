@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/DevOps-Pipeline-groovy.iml" filepath="$PROJECT_DIR$/DevOps-Pipeline-groovy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DevOps-Pipeline.iml" filepath="$PROJECT_DIR$/DevOps-Pipeline.iml" />
     </modules>
   </component>
 </project>
