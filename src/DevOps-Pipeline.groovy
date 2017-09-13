@@ -100,31 +100,38 @@ try {
 
         stage('Tool Setup'){
             // ** NOTE: These tools must be configured in the jenkins global configuration.
-            if (isUnix()) {
-                sh "echo 'Running in Unix mode'"
-                mvnHome = tool name: 'mvn3', type: 'maven'
-                antHome = tool name: 'ant1.9.6', type: 'ant'
-            } else {
-                bat(/echo 'Running in windows mode' /)
-                mvnHome = tool name: 'mvn3', type: 'maven'
-                antHome = tool name: 'ant1.9.6', type: 'ant'
-            }
-            if (isAnalysisEnabled) {
-                sonarHome = tool name: 'sonar-scanner-3.0.3.778', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+            try {
+                if (isUnix()) {
+                    sh "echo 'Running in Unix mode'"
+                    mvnHome = tool name: 'mvn3', type: 'maven'
+                    antHome = tool name: 'ant1.9.6', type: 'ant'
+                } else {
+                    bat(/echo 'Running in windows mode' /)
+                    mvnHome = tool name: 'mvn3', type: 'maven'
+                    antHome = tool name: 'ant1.9.6', type: 'ant'
+                }
+                if (isAnalysisEnabled) {
+                    sonarHome = tool name: 'sonar-scanner-3.0.3.778', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                }
+            } catch (exc) {
+                echo "Failure in Tool Setup stage: ${exc}"
             }
         }
 
         stage('Checkout') {
+            try {
+                cleanWs() // cleanup workspace before build starts
 
-            cleanWs() // cleanup workspace before build starts
-
-            // Checkout codes from repository
-            dir('devops-web-maven') {
-                git url: 'https://github.com/veersudhir83/devops-web-maven.git',
-                        branch: 'master'
-            }
-            dir('downloadsFromArtifactory') {
-                // created folder for artifactory
+                // Checkout codes from repository
+                dir('devops-web-maven') {
+                    git url: 'https://github.com/veersudhir83/devops-web-maven.git',
+                            branch: 'master'
+                }
+                dir('downloadsFromArtifactory') {
+                    // created folder for artifactory
+                }
+            } catch (exc) {
+                echo "Failure in Checkout stage: ${exc}"
             }
         }
 
@@ -145,23 +152,27 @@ try {
         }
 
         stage('Analysis') {
-            if (isAnalysisEnabled) {
-                if (isUnix()) {
-                    dir('devops-web-maven/') {
-                        sh "'${mvnHome}/bin/mvn' sonar:sonar"
-                    }
-                } else {
-                    dir('devops-web-maven\\') {
-                        bat(/"${mvnHome}\bin\mvn" --batch-mode sonar:sonar/)
+            try {
+                if (isAnalysisEnabled) {
+                    if (isUnix()) {
+                        dir('devops-web-maven/') {
+                            sh "'${mvnHome}/bin/mvn' sonar:sonar"
+                        }
+                    } else {
+                        dir('devops-web-maven\\') {
+                            bat(/"${mvnHome}\bin\mvn" --batch-mode sonar:sonar/)
+                        }
                     }
                 }
+            } catch (exc) {
+                echo "Failure in Analysis stage: ${exc}"
             }
         }
 
         stage('Publish') {
-            if (isArchivalEnabled) {
-                echo 'Publish Artifacts & appConfig.json in progress'
-                try {
+            try {
+                if (isArchivalEnabled) {
+                    echo 'Publish Artifacts & appConfig.json in progress'
                     if (isUnix()) {
                         dir('devops-web-maven/') {
                             sh "cp ./target/${appName}*.${artifactExtension} ./target/${appName}.${artifactExtension}"
@@ -213,9 +224,9 @@ try {
                             }
                         }
                     }
-                } catch (exc) {
-                    echo "Failure in Publish process of Publish stage: ${exc}"
                 }
+            } catch (exc) {
+                echo "Failure in Publish stage: ${exc}"
             }
         }
 
@@ -264,12 +275,16 @@ try {
         }
 
         stage('Generate Reports') {
-            if (isUnix()) {
-                junit '**/devops-web-maven/target/surefire-reports/*.xml'
-                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'devops-web-maven/target/site/apidocs', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
-            } else {
-                junit '**\\devops-web-maven\\target\\surefire-reports\\*.xml'
-                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'devops-web-maven\\target\\site\\apidocs', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
+            try {
+                if (isUnix()) {
+                    junit '**/devops-web-maven/target/surefire-reports/*.xml'
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'devops-web-maven/target/site/apidocs', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
+                } else {
+                    junit '**\\devops-web-maven\\target\\surefire-reports\\*.xml'
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'devops-web-maven\\target\\site\\apidocs', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
+                }
+            } catch (exc) {
+                echo "Failure in Generate Reports stage: ${exc}"
             }
         }
 
