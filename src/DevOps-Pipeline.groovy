@@ -141,10 +141,12 @@ try {
                 if (isUnix()) {
                     dir('devops-web-maven/') {
                         sh "'${mvnHome}/bin/mvn' clean package -P metrics pmd:pmd pmd:cpd javadoc:javadoc"
+                        sh "cp ./target/devops-web-maven*.war ./target/devops-web-maven.war"
                     }
                 } else {
                     dir('devops-web-maven\\') {
                         bat(/"${mvnHome}\bin\mvn" --batch-mode clean package -P metrics pmd:pmd pmd:cpd javadoc:javadoc/)
+                        bat(/copy target\\devops-web-maven*.war target\\devops-web-maven.war/)
                     }
                 }
             } catch (exc) {
@@ -198,7 +200,7 @@ try {
                         artifactoryServer.download(downloadAppConfigUnix)
                         dir('downloadsFromArtifactory/') {
                             sh '''
-                                curl -uadmin:APTvW3dVn6kUTbS -O "http://localhost:8081/artifactory/generic-local/Applications/DevOps/devops-web-maven/DEV/appConfig.json"                                
+                                curl -uadmin:APTvW3dVn6kUTbS -O "http://localhost:8081/artifactory/generic-local/Applications/DevOps/devops-web-maven/DEV/appConfig.json"
                                 FILE=appConfig.json
                                 TEMP=temp.json
                                 if [ -f $FILE ]
