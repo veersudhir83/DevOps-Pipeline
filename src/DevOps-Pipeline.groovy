@@ -114,7 +114,7 @@ try {
                     sonarHome = tool name: 'sonar-scanner-3.0.3.778', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                 }
             } catch (exc) {
-                echo "Failure in Tool Setup stage: ${exc}"
+                error "Failure in Tool Setup stage: ${exc}"
             }
         }
 
@@ -131,7 +131,7 @@ try {
                     // created folder for artifactory
                 }
             } catch (exc) {
-                echo "Failure in Checkout stage: ${exc}"
+                error "Failure in Checkout stage: ${exc}"
             }
         }
 
@@ -147,7 +147,7 @@ try {
                     }
                 }
             } catch (exc) {
-                echo "Failure in Build stage: ${exc}"
+                error "Failure in Build stage: ${exc}"
             }
         }
 
@@ -165,7 +165,7 @@ try {
                     }
                 }
             } catch (exc) {
-                echo "Failure in Analysis stage: ${exc}"
+                error "Failure in Analysis stage: ${exc}"
             }
         }
 
@@ -226,7 +226,7 @@ try {
                     }
                 }
             } catch (exc) {
-                echo "Failure in Publish stage: ${exc}"
+                error "Failure in Publish stage: ${exc}"
             }
         }
 
@@ -270,7 +270,7 @@ try {
                     }
                 }
             } catch(exc) {
-                echo "Failure in Deployment stage: ${exc}"
+                error "Failure in Deployment stage: ${exc}"
             }
         }
 
@@ -284,11 +284,11 @@ try {
                     publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'devops-web-maven\\target\\site\\apidocs', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
                 }
             } catch (exc) {
-                echo "Failure in Generate Reports stage: ${exc}"
+                error "Failure in Generate Reports stage: ${exc}"
             }
         }
 
     }
 } catch (exc) {
-    echo "Caught: ${exc}"
+    error "Caught: ${exc}"
 }
