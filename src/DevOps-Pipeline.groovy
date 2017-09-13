@@ -132,11 +132,11 @@ try {
             try {
                 if (isUnix()) {
                     dir('devops-web-maven/') {
-                        sh "'${mvnHome}/bin/mvn' clean package -P metrics pmd:pmd pmd:cpd javadoc:javadoc site"
+                        sh "'${mvnHome}/bin/mvn' clean package -P metrics pmd:pmd pmd:cpd javadoc:javadoc"
                     }
                 } else {
                     dir('devops-web-maven\\') {
-                        bat(/"${mvnHome}\bin\mvn" --batch-mode clean package -P metrics pmd:pmd pmd:cpd javadoc:javadoc site/)
+                        bat(/"${mvnHome}\bin\mvn" --batch-mode clean package -P metrics pmd:pmd pmd:cpd javadoc:javadoc/)
                     }
                 }
             } catch (exc) {
