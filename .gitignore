@@ -4,6 +4,7 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
+.idea/workspace.xml
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
@@ -46,4 +47,3 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
-
