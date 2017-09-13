@@ -105,6 +105,7 @@ try {
                     sh "echo 'Running in Unix mode'"
                     mvnHome = tool name: 'mvn3', type: 'maven'
                     antHome = tool name: 'ant1.9.6', type: 'ant'
+                    ansible = tool name: 'ansible1.5', type: 'org.jenkinsci.plugins.ansible.AnsibleInstallation'
                 } else {
                     bat(/echo 'Running in windows mode' /)
                     mvnHome = tool name: 'mvn3', type: 'maven'
@@ -232,38 +233,26 @@ try {
 
         stage('Deployment') {
             // TODO: Add code for deployment of project to server
-            echo 'Deploy applications to docker/cloud instances'
+            echo 'Deploy application using ansible'
             try {
                 if (isUnix()) {
-                    dir('devops-web-maven/') {
-                        // TODO: Deployment to cloud foundry
-                        /*wrap([$class: 'CloudFoundryCliBuildWrapper',
-                              cloudFoundryCliVersion: 'Cloud Foundry CLI (built-in)',
-                              apiEndpoint: 'https://api.system.aws-usw02-pr.ice.predix.io',
-                              skipSslValidation: true,
-                              credentialsId: '0b599508-6757-4c0c-be6e-c3367b89d7d5',
-                              organization: 'sudheer.veeravalli@quest-global.com',
-                              space: 'dev']) {
+                    ansiblePlaybook installation: 'ansible1.5', playbook: 'devops-web-maven/configuration_scripts/app-deploy.yml'
 
-                            sh 'cf push'
-                        }*/
+                    // Deployment to docker containers devopsmaven-container*
+                    // Commented out on purpose - Use with customization when needed
+                    /*sh '''
+                        docker ps -a | awk '{print $NF}' | grep -w devopsmaven* > temp.txt
+                        sort temp.txt -o container_names_files.txt
+                        while IFS='' read -r line || [[ -n "$line" ]]; do
+                            echo "#############################"
+                            STATUS=`docker inspect --format='{{json .State.Running}}' $line`
+                            echo "Container Name is : $line and Status is $STATUS"
 
-                        // Deployment to docker containers devopsmaven-container*
-                        // Commented out on purpose - Use with customization when needed
-                        /*sh '''
-                            docker ps -a | awk '{print $NF}' | grep -w devopsmaven* > temp.txt
-                            sort temp.txt -o container_names_files.txt
-                            while IFS='' read -r line || [[ -n "$line" ]]; do
-                                echo "#############################"
-                                STATUS=`docker inspect --format='{{json .State.Running}}' $line`
-                                echo "Container Name is : $line and Status is $STATUS"
-
-                                # copy war file to container
-                                docker cp ./target/devops-web-maven.jar $line:/home/
-                                echo "jar file is copied !!"
-                            done < "container_names_files.txt"
-                        '''*/
-                    }
+                            # copy war file to container
+                            docker cp ./target/devops-web-maven.jar $line:/home/
+                            echo "jar file is copied !!"
+                        done < "container_names_files.txt"
+                    '''*/
                 } else {
                     dir('devops-web-maven\\') {
                         // Do Something else
