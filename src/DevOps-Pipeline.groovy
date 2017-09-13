@@ -6,7 +6,7 @@
 
 /* Only keep the 10 most recent builds. */
 def projectProperties = [
-        buildDiscarder(logRotator(artifactDaysToKeepStr: '5', artifactNumToKeepStr: '5', daysToKeepStr: '5', numToKeepStr: '5')),
+        buildDiscarder(logRotator(artifactDaysToKeepStr: '20', artifactNumToKeepStr: '20', daysToKeepStr: '20', numToKeepStr: '20')),
         [$class: 'GithubProjectProperty', projectUrlStr: 'https://github.com/veersudhir83/DevOps-Pipeline.git/']
         //,pipelineTriggers([pollSCM('H/10 * * * *')])
 ]
