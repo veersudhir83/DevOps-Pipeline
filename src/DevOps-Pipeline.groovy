@@ -106,7 +106,7 @@ try {
                 antHome = tool name: 'ant1.9.6', type: 'ant'
             } else {
                 bat(/echo 'Running in windows mode' /)
-                mvnHome = tool name: 'mvn3.5', type: 'maven'
+                mvnHome = tool name: 'mvn3', type: 'maven'
                 antHome = tool name: 'ant1.9.6', type: 'ant'
             }
             if (isAnalysisEnabled) {
