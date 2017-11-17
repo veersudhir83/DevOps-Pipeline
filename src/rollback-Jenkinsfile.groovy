@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 
 /**
- * @ Maintainer Sudheer Veeravalli <Sudheer.Veeravalli@quest-global.com>
+ * @ Maintainer Sudheer Veeravalli <veersudhir83@gmail.com>
  */
 
 /* Only keep the 10 most recent builds. */
@@ -14,15 +14,15 @@ properties(projectProperties)
 
 try {
   node {
-    def appName = "MediConnekt"  
-    def artifactoryRepoName = 'Quest-DevOps'
+    def appName = "Application"  
+    def artifactoryRepoName = 'DevOps'
     def workspaceRoot = env.WORKSPACE 
     def ROLLBACK_TO_BUILD = params.ROLLBACK_TO_BUILD
 
     stage('Download Config Files') {
       sh '''
-         cp -r ./../MediConnekt-DEV/repo/Configuration_Files/ansible_files .
-         rm ansible_files/mediconnekt-web.tar
+         cp -r ./../Application/repo/Configuration_Files/ansible_files .
+         rm ansible_files/appname-web.tar
       '''
       
     }
@@ -30,13 +30,13 @@ try {
     stage('Download File') {
       sh '''
         cd ansible_files
-        curl -uadmin:AP2FfJmveKDYuUnGqKfQrkYTmKS -O "http://10.1.151.88:8081/artifactory/generic-local/Applications/Quest-DevOps/MediConnekt/app/${ROLLBACK_TO_BUILD}/mediconnekt-web.tar"
+        curl -uadmin:XXXXXXXXXX -O "http://localhost:8081/artifactory/generic-local/Applications/DevOps/${appName}/app/${ROLLBACK_TO_BUILD}/${appName}-web.tar"
       '''
     }
 	
     stage('Perform Rollback') {
       dir('ansible_files/') {
-        sh "ansible-playbook rollback-on-dev.yml -i mediconnekt_hosts --extra-vars 'ROLLBACK_TO_BUILD=${ROLLBACK_TO_BUILD}'"
+        sh "ansible-playbook rollback-on-dev.yml -i hosts_file --extra-vars 'ROLLBACK_TO_BUILD=${ROLLBACK_TO_BUILD}'"
       }
     }
   }
