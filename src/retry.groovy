@@ -7,7 +7,8 @@ String boldRedMessage(final String message) { return "\033[1;31m${message}\033[0
 String boldYellowMessage(final String message) { return "\033[1;33m${message}\033[0m" }
 String triplePrefixMessage(final Closure<String> colour, final String prefix, final String message) {
     def colouredPrefix = "${colour("${prefix}")}"
-    return "${colouredPrefix}\n${colouredPrefix} ${message}\n${colouredPrefix}"
+    def colouredMessage = "${colour("${message}")}"
+    return "${colouredPrefix}\n${colouredPrefix} ${colouredMessage}\n${colouredPrefix}"
 }
 void successMessage(final String message) { ansiColor('xterm') { echo triplePrefixMessage(this.&boldGreenMessage, '[SUCCESS]', message) } }
 void infoMessage(final String message) { ansiColor('xterm') { echo triplePrefixMessage(this.&boldBlueMessage, '[INFO]', message) } }
