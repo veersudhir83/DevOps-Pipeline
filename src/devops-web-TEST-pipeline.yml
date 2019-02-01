@@ -1,0 +1,65 @@
+node {
+  def res
+  def Application='devops-web'
+  def Environment='TEST'
+    
+  stage('Compile, Build and Analyze Code') {
+    res = build job: 'devops-web', propagate: false
+  }
+  
+  stage('Prepare Test Suite') {
+    build job: 'devops-web-build-test-suite', propagate: true
+  }
+    
+  stage('Publish Config Info') {
+    build job: 'devops-web-publish', parameters: 
+        [
+            string(name: 'Application', value: "$Application"), 
+            string(name: 'Environment', value: "$Environment"), 
+            string(name: 'NewBuildNumber', value: "$res.number")
+        ]
+  }
+  
+  stage ('Deployment-On-Docker') {
+    build job: 'devops-web-deployer-docker', parameters: 
+        [
+            string(name: 'Application', value: "$Application"), 
+            string(name: 'Environment', value: "$Environment"), 
+            string(name: 'NewBuildNumber', value: "$res.number")
+        ]  
+  }
+  
+  stage ('Deployment-On-VMs-Ansible') {
+    build job: 'devops-web-deployer-ansible', parameters: 
+        [
+            string(name: 'Application', value: "$Application"), 
+            string(name: 'Environment', value: "$Environment"), 
+            string(name: 'NewBuildNumber', value: "$res.number")
+        ]  
+  }
+  
+  /*    
+  stage ('Deployment') {
+   parallel docker: {
+      build job: 'devops-web-deployer-docker', parameters: 
+        [
+            string(name: 'Application', value: "$Application"), 
+            string(name: 'Environment', value: "$Environment"), 
+            string(name: 'NewBuildNumber', value: "$res.number")
+        ]
+    }, ansible: {
+      build job: 'devops-web-deployer-ansible', parameters: 
+        [
+            string(name: 'Application', value: "$Application"), 
+            string(name: 'Environment', value: "$Environment"), 
+            string(name: 'NewBuildNumber', value: "$res.number")
+        ]
+    },
+    failFast: true
+  }
+  */
+  
+  stage('Test Execution') {
+    res = build job: 'devops-web-run-tests', propagate: false
+  }
+}
