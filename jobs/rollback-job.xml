@@ -1,0 +1,86 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?><project>
+  <actions/>
+  <description/>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.jira.JiraProjectProperty plugin="jira@3.0.15"/>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <org.biouno.unochoice.ChoiceParameter plugin="uno-choice@2.2.2">
+          <name>JOB_NAME</name>
+          <description/>
+          <randomName>choice-parameter-27414301894762</randomName>
+          <visibleItemCount>1</visibleItemCount>
+          <script class="org.biouno.unochoice.model.GroovyScript">
+            <secureScript plugin="script-security@1.71">
+              <script>import jenkins.model.*
+import hudson.model.*
+import hudson.model.Result
+import hudson.util.RunList
+
+def list=[]
+Jenkins.instance.getAllItems(AbstractItem.class).each { job-&gt;
+  list.add(job.name)
+}
+return list</script>
+              <sandbox>false</sandbox>
+            </secureScript>
+            <secureFallbackScript plugin="script-security@1.71">
+              <script/>
+              <sandbox>false</sandbox>
+            </secureFallbackScript>
+          </script>
+          <projectName>rollback</projectName>
+          <projectFullName>rollback</projectFullName>
+          <choiceType>PT_SINGLE_SELECT</choiceType>
+          <filterable>false</filterable>
+          <filterLength>1</filterLength>
+        </org.biouno.unochoice.ChoiceParameter>
+        <org.biouno.unochoice.ChoiceParameter plugin="uno-choice@2.2.2">
+          <name>ROLLBACK_BUILD</name>
+          <description/>
+          <randomName>choice-parameter-27189337845661</randomName>
+          <visibleItemCount>1</visibleItemCount>
+          <script class="org.biouno.unochoice.model.GroovyScript">
+            <secureScript plugin="script-security@1.71">
+              <script>import jenkins.model.*
+import hudson.model.*
+import hudson.model.Result
+import hudson.util.RunList
+
+def job = Jenkins.getInstance().getItem("devops-hackathon-test-suite")
+def builds = job.getBuilds()
+//.overThresholdOnly(Result.SUCCESS)
+def list = builds.limit(10).collect{ it.number }</script>
+              <sandbox>false</sandbox>
+            </secureScript>
+            <secureFallbackScript plugin="script-security@1.71">
+              <script/>
+              <sandbox>false</sandbox>
+            </secureFallbackScript>
+          </script>
+          <projectName>rollback</projectName>
+          <projectFullName>rollback</projectFullName>
+          <choiceType>PT_SINGLE_SELECT</choiceType>
+          <filterable>false</filterable>
+          <filterLength>1</filterLength>
+        </org.biouno.unochoice.ChoiceParameter>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+    
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>echo ${ROLLBACK_BUILD}</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>
