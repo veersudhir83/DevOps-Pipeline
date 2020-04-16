@@ -1,0 +1,17 @@
+## List of plugins installed in Jenkins ##
+Safe Restart
+Environment Injector Plugin
+SonarQube Scanner for Jenkins
+HTML Publisher plugin
+JUnit Plugin
+PMD Plug-in
+JaCoCo plugin
+Green Balls
+Artifactory Plugin
+Ansible plugin
+Xvfb plugin
+Active Choices Plug-in
+
+## Tools Installed in Jenkins ##
+mvn 3.3.9
+ant 1.9.8
