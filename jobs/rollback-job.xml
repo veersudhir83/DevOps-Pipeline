@@ -7,7 +7,7 @@
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
         <org.biouno.unochoice.ChoiceParameter plugin="uno-choice@2.2.2">
-          <name>JOB_NAME</name>
+          <name>PROJECT_NAME</name>
           <description/>
           <randomName>choice-parameter-27414301894762</randomName>
           <visibleItemCount>1</visibleItemCount>
@@ -36,10 +36,10 @@ return list</script>
           <filterable>false</filterable>
           <filterLength>1</filterLength>
         </org.biouno.unochoice.ChoiceParameter>
-        <org.biouno.unochoice.ChoiceParameter plugin="uno-choice@2.2.2">
+        <org.biouno.unochoice.CascadeChoiceParameter plugin="uno-choice@2.2.2">
           <name>ROLLBACK_BUILD</name>
           <description/>
-          <randomName>choice-parameter-27189337845661</randomName>
+          <randomName>choice-parameter-22441976993915</randomName>
           <visibleItemCount>1</visibleItemCount>
           <script class="org.biouno.unochoice.model.GroovyScript">
             <secureScript plugin="script-security@1.71">
@@ -48,7 +48,7 @@ import hudson.model.*
 import hudson.model.Result
 import hudson.util.RunList
 
-def job = Jenkins.getInstance().getItem("devops-hackathon-test-suite")
+def job = Jenkins.getInstance().getItem(PROJECT_NAME)
 def builds = job.getBuilds()
 //.overThresholdOnly(Result.SUCCESS)
 def list = builds.limit(10).collect{ it.number }</script>
@@ -61,10 +61,12 @@ def list = builds.limit(10).collect{ it.number }</script>
           </script>
           <projectName>rollback</projectName>
           <projectFullName>rollback</projectFullName>
+          <parameters class="linked-hash-map"/>
+          <referencedParameters>PROJECT_NAME</referencedParameters>
           <choiceType>PT_SINGLE_SELECT</choiceType>
           <filterable>false</filterable>
           <filterLength>1</filterLength>
-        </org.biouno.unochoice.ChoiceParameter>
+        </org.biouno.unochoice.CascadeChoiceParameter>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
     
@@ -78,7 +80,8 @@ def list = builds.limit(10).collect{ it.number }</script>
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>echo ${ROLLBACK_BUILD}</command>
+      <command>echo ${PROJECT_NAME}
+echo ${ROLLBACK_BUILD}</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
